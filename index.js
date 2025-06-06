@@ -7,6 +7,20 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
+const API_KEY = process.env.API_KEY || '52345324523461'; // Put your API key here or in Render Environment Variables
+
+// Middleware to check API key
+app.use((req, res, next) => {
+    const userKey = req.headers['x-api-key'] || req.query.api_key;
+    
+    if (userKey !== API_KEY) {
+        return res.status(403).json({ error: 'Forbidden - invalid API key' });
+    }
+
+    next();
+});
+
+
 app.use(express.json()); // allows parsing JSON body (important for POST/PUT/PATCH)
 app.use(express.urlencoded({ extended: true })); // allows parsing form data (important for login or forms)
 
